@@ -1,53 +1,260 @@
 // ==UserScript==
 // @name         MC百科 - 便捷工具
 // @namespace    https://github.com/ifover/UserScript
-// @version      0.2
+// @version      0.3
 // @author       ifover
 // @description  在MC百科首页显示收藏列表，方便导航
 // @license      GPL-3.0 License
 // @icon         https://www.mcmod.cn/images/favicon.ico
-// @match        https://*.mcmod.cn/
+// @match        https://*.mcmod.cn/*
 // @require      https://kit.fontawesome.com/d4dda3d6cc.js
 // @require      https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js
 // @require      https://unpkg.com/vue-demi@latest/lib/index.iife.js
 // @require      data:application/javascript,%3Bwindow.Vue%3DVue%3B
-// @require      https://unpkg.com/dayjs/dayjs.min.js
-// @require      https://unpkg.com/dayjs/plugin/customParseFormat.js
-// @require      https://unpkg.com/dayjs/plugin/weekday.js
-// @require      https://unpkg.com/dayjs/plugin/localeData.js
-// @require      https://unpkg.com/dayjs/plugin/weekOfYear.js
-// @require      https://unpkg.com/dayjs/plugin/weekYear.js
-// @require      https://unpkg.com/dayjs/plugin/advancedFormat.js
-// @require      https://unpkg.com/dayjs/plugin/quarterOfYear.js
 // @require      https://cdn.jsdelivr.net/npm/pinia@2.3.0/dist/pinia.iife.prod.js
-// @require      https://unpkg.com/ant-design-vue@4.2.6/dist/antd.min.js
+// @require      https://unpkg.com/naive-ui@2.40.4/dist/index.prod.js
+// @connect      center.mcmod.cn
 // @grant        GM_addStyle
+// @grant        GM_getValue
+// @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
-(e=>{if(typeof GM_addStyle=="function"){GM_addStyle(e);return}const t=document.createElement("style");t.textContent=e,document.head.append(t)})(" #app,#app[data-v-22dd0357]{width:333px;max-height:520px;cursor:default;background-color:#e9e9e9;font-size:12px;position:fixed;left:10px;top:286px;border-radius:4PX 4px 0 0;z-index:10}.mm_sidebar[data-v-22dd0357]{cursor:pointer;position:fixed;left:-24px}.mm_sidebar[data-v-22dd0357]:hover{left:0;transition:.3s ease-out}.mm_sidebar .mm_sidebar_fav[data-v-22dd0357]{box-sizing:content-box;width:26px;height:26px;font-size:26px;padding:8px;color:#ccc}.mm_header[data-v-22dd0357]{height:24px;border-radius:4px 4px 0 0;background-color:#ccc;padding:0 5px;text-align:right}.mm_header .mm_close[data-v-22dd0357]{cursor:pointer;color:#191919}.mm_content[data-v-22dd0357]{max-height:484px;overflow-y:scroll;padding:6px 8px}.mm_content .mm_fav_li[data-v-22dd0357]{display:flex;align-items:center;padding:2px 0;cursor:pointer}.mm_content .mm_fav_li .mm_fav_cover[data-v-22dd0357]{width:60px;opacity:.77;margin-right:6px}.mm_content .mm_fav_li .mm_fav_title[data-v-22dd0357]{width:182px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}[data-v-22dd0357]::-webkit-scrollbar{width:8px}[data-v-22dd0357]::-webkit-scrollbar-thumb{background-color:#c1c1c1}[data-v-22dd0357]::-webkit-scrollbar-track{background-color:#f1f1f1}[data-v-22dd0357] .mm_tree_lv2 .ant-tree-switcher.ant-tree-switcher-noop{width:12px}[data-v-22dd0357] .mm_tree_lv2 .ant-tree-title a{text-decoration:none;cursor:pointer}[data-v-22dd0357] .mm_tree_lv2 .ant-tree-title a:hover *{color:#2575f9}[data-v-22dd0357] .ant-tree{background-color:transparent}[data-v-22dd0357] .ant-tree .ant-tree-title{display:flex;align-items:center}[data-v-22dd0357] .ant-tree .ant-tree-title a{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}[data-v-22dd0357] .ant-tree .ant-tree-title .mm_title_icon{font-size:12px;margin-left:5px;color:#888}[data-v-22dd0357] .ant-tree .ant-tree-treenode.ant-tree-treenode-switcher-close,[data-v-22dd0357] .ant-tree .ant-tree-treenode.ant-tree-treenode-switcher-open,[data-v-22dd0357] .ant-tree .ant-tree-treenode.ant-tree-treenode-disabled{position:sticky;top:-6px;z-index:10;background-color:#e9e9e9}[data-v-22dd0357] .ant-tree .ant-tree-treenode.ant-tree-treenode-disabled{top:22px} ");
+(a=>{if(typeof GM_addStyle=="function"){GM_addStyle(a);return}const e=document.createElement("style");e.textContent=a,document.head.append(e)})(" div,a,ul,li{color:unset}.ooops{z-index:1}.n-message-container{z-index:10000}#mm-main{cursor:default;font-size:12px}.mm-more:hover,.mm-close:hover{cursor:pointer;color:#00a0d8}.mm-sidebar[data-v-ccbe2c9f]{position:fixed;left:0;top:286px;z-index:10;transform:translate(-60%)}.mm-sidebar .mm-btn[data-v-ccbe2c9f]{height:42px;transition:.3s ease-out}.mm-sidebar .mm-btn[data-v-ccbe2c9f]:hover{transform:translate(60%)}.mm-sidebar .mm-icon[data-v-ccbe2c9f]{display:flex;align-items:center;justify-content:center}.mm-sidebar .mm-icon.mm-fav[data-v-ccbe2c9f]{font-size:26px;color:#ccc}.mm-manage[data-v-8a18aa94]{cursor:default;width:420px;background-color:#fff;border-radius:5px}.mm-manage .mm-manage-header[data-v-8a18aa94]{display:flex;align-items:center;padding:10px 15px;border-bottom:1px solid #88888822}.mm-manage .mm-manage-header .mm-manage-header-title[data-v-8a18aa94]{font-size:16px;font-weight:600}.mm-manage .mm-manage-header .mm-close[data-v-8a18aa94]{margin-left:auto}.mm-manage .mm-manage-content[data-v-8a18aa94]{padding:10px 15px}.mm-manage .mm-manage-content .mm-description[data-v-8a18aa94]{display:flex;gap:8px;margin-bottom:8px}.mm-manage .mm-manage-content .mm-description>div[data-v-8a18aa94]{background-color:#33333320;padding:0 6px;border-radius:4px}.mm-manage .mm-manage-content .mm-icon-group[data-v-8a18aa94]{display:flex;gap:12px;align-items:center;justify-content:center}.mm-manage .mm-manage-content .mm-icon-group .mm-action-icon[data-v-8a18aa94]{cursor:pointer;color:#666;transition:color .2s ease}.mm-manage .mm-manage-content .mm-icon-group .mm-action-icon[data-v-8a18aa94]:hover:not(.disabled){color:#18a058}.mm-manage .mm-manage-content .mm-icon-group .mm-action-icon.disabled[data-v-8a18aa94]{cursor:not-allowed;color:#999;opacity:.6}#mm-favorites[data-v-6b258809]{width:320px;max-height:calc(100vh - 70px);overflow:hidden;background-color:#fff;box-shadow:0 4px 12px #0000000d;border-radius:4px;position:fixed;top:60px;left:10px;z-index:11}#mm-favorites .mm-panel-header[data-v-6b258809]{height:46px;display:flex;align-items:center;box-sizing:border-box;gap:8px;border-bottom:1px solid rgba(136,136,136,.133);padding:8px 12px;color:#000;fill:#000}#mm-favorites .mm-panel-header .mm-header-title[data-v-6b258809]{font-size:18px;font-weight:600}#mm-favorites .mm-panel-header .mm-more[data-v-6b258809]{margin-left:auto}#mm-favorites .mm-panel-content[data-v-6b258809]{padding:6px 12px}#mm-favorites .mm-panel-content .mm-empty[data-v-6b258809]{text-align:center}[data-v-6b258809] .n-tree .n-tree-node-switcher.n-tree-node-switcher--expanded{transform:none}[data-v-6b258809] .n-tree .n-tree-node-wrapper:has(.mm-fav-label-lv1){position:sticky;top:0;z-index:1;background-color:#fff}[data-v-6b258809] .n-tree .n-tree-node-wrapper:has(.mm-fav-label-lv1):has(.n-tree-node-switcher--hide){top:30px}[data-v-6b258809] .n-tree a{text-decoration:none}[data-v-6b258809] .n-tree a:hover *{color:#2575f9}[data-v-6b258809] .n-tree .mm-fav-label-icon{font-size:12px;margin-left:8px;color:#888}[data-v-6b258809] .n-tree .mm-fav-list{display:flex;align-items:center;padding:2px 0;cursor:pointer}[data-v-6b258809] .n-tree .mm-fav-list .mm-fav-cover{width:60px;opacity:.77;margin-right:6px}[data-v-6b258809] .n-tree .mm-fav-list .mm-fav-label{overflow:hidden;white-space:nowrap;text-overflow:ellipsis} ");
 
-(function (vue, pinia$1, antDesignVue) {
+(function (vue, pinia$1, naiveUi) {
   'use strict';
 
+  const _hoisted_1$2 = {
+    key: 0,
+    class: "mm-sidebar"
+  };
+  const _sfc_main$3 = /* @__PURE__ */ vue.defineComponent({
+    __name: "MSidebar",
+    emits: ["eventFavoriteShow"],
+    setup(__props, { emit: __emit }) {
+      let modalShow = vue.ref(false);
+      const emits = __emit;
+      const handleOpen = () => {
+        emits("eventFavoriteShow", true);
+      };
+      return (_ctx, _cache) => {
+        return !vue.unref(modalShow) ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$2, [
+          vue.createVNode(vue.unref(naiveUi.NFloatButton), {
+            class: "mm-btn",
+            width: "42",
+            position: "relative",
+            right: 0,
+            bottom: 0,
+            onClick: handleOpen
+          }, {
+            default: vue.withCtx(() => [
+              vue.createVNode(vue.unref(naiveUi.NIcon), { size: "26" }, {
+                default: vue.withCtx(() => _cache[0] || (_cache[0] = [
+                  vue.createElementVNode("i", { class: "fa-regular fa-heart" }, null, -1)
+                ])),
+                _: 1
+              })
+            ]),
+            _: 1
+          })
+        ])) : vue.createCommentVNode("", true);
+      };
+    }
+  });
+  const _export_sfc = (sfc, props) => {
+    const target = sfc.__vccOpts || sfc;
+    for (const [key, val] of props) {
+      target[key] = val;
+    }
+    return target;
+  };
+  const MSidebar = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-ccbe2c9f"]]);
+  var _GM_getValue = /* @__PURE__ */ (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
+  var _GM_setValue = /* @__PURE__ */ (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
   var _GM_xmlhttpRequest = /* @__PURE__ */ (() => typeof GM_xmlhttpRequest != "undefined" ? GM_xmlhttpRequest : void 0)();
-  const useUserStore = pinia$1.defineStore("user", {
+  const useMMStore = pinia$1.defineStore("mm", {
     state: () => ({
-      userID: "0000"
+      userID: "0000",
+      favoriteData: []
     }),
     actions: {
-      actionUserID(id) {
+      setUserID(id) {
         this.userID = id;
+      },
+      setFavoriteData(data) {
+        this.favoriteData = data;
       }
     }
   });
+  const _hoisted_1$1 = { class: "mm-manage" };
+  const _hoisted_2$1 = { class: "mm-manage-header" };
+  const _hoisted_3$1 = { class: "mm-manage-content" };
+  const _hoisted_4$1 = { class: "mm-description" };
+  const _hoisted_5 = { style: { "text-align": "center" } };
+  const _hoisted_6 = { class: "mm-icon-group" };
+  const _sfc_main$2 = /* @__PURE__ */ vue.defineComponent({
+    __name: "MManage",
+    props: {
+      showModal: {
+        type: Boolean,
+        default: false
+      }
+    },
+    emits: ["emitClose"],
+    setup(__props, { emit: __emit }) {
+      const mmStore = useMMStore();
+      let tableData = vue.reactive([]);
+      const props = __props;
+      const emits = __emit;
+      vue.watch(() => mmStore.favoriteData, (newV, oldV) => {
+        tableData = [...newV];
+      }, { deep: true });
+      const handleClose = () => {
+        emits("emitClose", false);
+      };
+      const toggleHidden = (item) => {
+        item.folderHidden = !item.folderHidden;
+        if (item.folderHidden) {
+          item.folderExpand = false;
+        }
+        let gmFavList = _GM_getValue("favList");
+        if (gmFavList) {
+          let arr = gmFavList.map((o) => {
+            if (item.favID === o.favID) {
+              return {
+                ...o,
+                folderHidden: item.folderHidden,
+                folderExpand: item.folderHidden && false
+              };
+            }
+            return o;
+          });
+          _GM_setValue("favList", arr);
+        }
+      };
+      const toggleExpand = (item) => {
+        item.folderExpand = !item.folderExpand;
+        let gmFavList = _GM_getValue("favList");
+        if (gmFavList) {
+          let arr = gmFavList.map((o) => {
+            if (item.favID === o.favID) {
+              return {
+                ...o,
+                folderExpand: item.folderExpand
+              };
+            }
+            return o;
+          });
+          _GM_setValue("favList", arr);
+        }
+      };
+      return (_ctx, _cache) => {
+        return vue.openBlock(), vue.createBlock(vue.unref(naiveUi.NModal), {
+          show: props.showModal
+        }, {
+          default: vue.withCtx(() => [
+            vue.createElementVNode("div", _hoisted_1$1, [
+              vue.createElementVNode("div", _hoisted_2$1, [
+                _cache[1] || (_cache[1] = vue.createElementVNode("div", { class: "mm-manage-header-title" }, "收藏夹管理", -1)),
+                vue.createVNode(vue.unref(naiveUi.NIcon), {
+                  class: "mm-close",
+                  size: "18",
+                  title: "关闭",
+                  onClick: handleClose
+                }, {
+                  default: vue.withCtx(() => _cache[0] || (_cache[0] = [
+                    vue.createElementVNode("i", { class: "fa-solid fa-xmark" }, null, -1)
+                  ])),
+                  _: 1
+                })
+              ]),
+              vue.createElementVNode("div", _hoisted_3$1, [
+                vue.createElementVNode("div", _hoisted_4$1, [
+                  _cache[6] || (_cache[6] = vue.createTextVNode(" Tips: ")),
+                  vue.createElementVNode("div", null, [
+                    vue.createVNode(vue.unref(naiveUi.NIcon), { style: { "margin-right": "3px" } }, {
+                      default: vue.withCtx(() => _cache[2] || (_cache[2] = [
+                        vue.createElementVNode("i", { class: "fa-solid fa-eye-slash" }, null, -1)
+                      ])),
+                      _: 1
+                    }),
+                    _cache[3] || (_cache[3] = vue.createTextVNode(" 隐藏 "))
+                  ]),
+                  vue.createElementVNode("div", null, [
+                    vue.createVNode(vue.unref(naiveUi.NIcon), { style: { "margin-right": "3px" } }, {
+                      default: vue.withCtx(() => _cache[4] || (_cache[4] = [
+                        vue.createElementVNode("i", { class: "fas fa-folder-open" }, null, -1)
+                      ])),
+                      _: 1
+                    }),
+                    _cache[5] || (_cache[5] = vue.createTextVNode(" 自动展开 "))
+                  ])
+                ]),
+                vue.createVNode(vue.unref(naiveUi.NTable), {
+                  bordered: true,
+                  "single-line": false
+                }, {
+                  default: vue.withCtx(() => [
+                    _cache[7] || (_cache[7] = vue.createElementVNode("thead", null, [
+                      vue.createElementVNode("tr", null, [
+                        vue.createElementVNode("th", null, "收藏夹名"),
+                        vue.createElementVNode("th", { style: { "width": "80px", "text-align": "center" } }, "操作")
+                      ])
+                    ], -1)),
+                    vue.createElementVNode("tbody", null, [
+                      (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(vue.unref(tableData), (i, k) => {
+                        return vue.openBlock(), vue.createElementBlock("tr", { key: k }, [
+                          vue.createElementVNode("td", null, vue.toDisplayString(i.favName), 1),
+                          vue.createElementVNode("td", _hoisted_5, [
+                            vue.createElementVNode("div", _hoisted_6, [
+                              vue.createVNode(vue.unref(naiveUi.NIcon), {
+                                class: "mm-action-icon",
+                                onClick: ($event) => toggleHidden(i)
+                              }, {
+                                default: vue.withCtx(() => [
+                                  vue.createElementVNode("i", {
+                                    class: vue.normalizeClass(["fa-solid", i.folderHidden ? "fa-eye-slash" : "fa-eye"])
+                                  }, null, 2)
+                                ]),
+                                _: 2
+                              }, 1032, ["onClick"]),
+                              vue.createVNode(vue.unref(naiveUi.NIcon), {
+                                class: vue.normalizeClass(["mm-action-icon", { disabled: i.folderHidden }]),
+                                title: i.folderHidden ? "隐藏时自动展开禁用" : "",
+                                onClick: ($event) => i.folderHidden ? null : toggleExpand(i)
+                              }, {
+                                default: vue.withCtx(() => [
+                                  vue.createElementVNode("i", {
+                                    class: vue.normalizeClass(["fas", i.folderExpand ? "fa-folder-open" : "fa-folder"])
+                                  }, null, 2)
+                                ]),
+                                _: 2
+                              }, 1032, ["class", "title", "onClick"])
+                            ])
+                          ])
+                        ]);
+                      }), 128))
+                    ])
+                  ]),
+                  _: 1
+                })
+              ])
+            ])
+          ]),
+          _: 1
+        }, 8, ["show"]);
+      };
+    }
+  });
+  const MManage = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-8a18aa94"]]);
   const json2FormData = (json) => {
     return Object.keys(json).map((key) => {
       return encodeURIComponent(key) + "=" + encodeURIComponent(json[key]);
     }).join("&");
   };
   const request = (url, data) => {
-    const userStore = useUserStore();
+    const userStore = useMMStore();
     return new Promise((resolve, reject) => {
       _GM_xmlhttpRequest({
         method: "POST",
@@ -68,70 +275,61 @@
       });
     });
   };
-  const _hoisted_1 = {
-    key: 0,
-    class: "mm_sidebar"
-  };
-  const _hoisted_2 = {
-    key: 1,
-    class: "mm_header"
-  };
+  const _hoisted_1 = { id: "mm-favorites" };
+  const _hoisted_2 = { class: "mm-panel-header" };
   const _hoisted_3 = {
-    key: 2,
-    class: "mm_content"
+    class: "mm-panel-content",
+    style: { "--height": "calc(100vh - 122px)" }
   };
   const _hoisted_4 = {
     key: 0,
-    class: "fas fa-folder-open"
+    class: "mm-skeleton"
   };
-  const _hoisted_5 = {
-    key: 1,
-    class: "fas fa-folder"
-  };
-  const _hoisted_6 = ["href", "title"];
-  const _hoisted_7 = { class: "mm_fav_li" };
-  const _hoisted_8 = ["src", "alt"];
-  const _hoisted_9 = { class: "mm_fav_title" };
-  const _hoisted_10 = {
-    key: 0,
-    title: "模组",
-    class: "mm_title_icon"
-  };
-  const _hoisted_11 = {
-    key: 1,
-    title: "整合包",
-    class: "mm_title_icon"
-  };
-  const _hoisted_12 = {
-    key: 2,
-    class: "mm_title_icon"
-  };
-  const _sfc_main = /* @__PURE__ */ vue.defineComponent({
-    __name: "App",
-    setup(__props) {
-      const userStore = useUserStore();
-      vue.reactive([]);
-      let modalShow = vue.ref(true);
-      const expandedKeys = vue.ref([]);
-      const selectedKeys = vue.ref([]);
-      let treeFavData = vue.ref([]);
-      const getUserID = () => {
-        let userUrlNode = document.querySelector(".top-username a");
-        if (!userUrlNode) return null;
-        let url = userUrlNode.getAttribute("href");
-        let arr = url == null ? void 0 : url.match(/\d+/);
-        if (arr == null ? void 0 : arr.length) {
-          userStore.actionUserID(arr[0]);
+  const _sfc_main$1 = /* @__PURE__ */ vue.defineComponent({
+    __name: "MFavorite",
+    emits: ["eventFavoriteShow"],
+    setup(__props, { emit: __emit }) {
+      const mmStore = useMMStore();
+      let isLoading = vue.ref(true);
+      let draggable = vue.ref(true);
+      const mmDropDownOptions = vue.ref([
+        {
+          label: "刷新",
+          key: "reload"
+        },
+        {
+          label: "收藏夹管理",
+          key: "manage"
         }
+      ]);
+      let mmTreeData = vue.ref([]);
+      let mmDefaultExpandedKeys = vue.reactive([]);
+      let mmManageShow = vue.ref(false);
+      const categoryEm = {
+        class: "mod",
+        mod: "class",
+        modpack: "modpack"
+      };
+      const emits = __emit;
+      const handleClose = () => {
+        emits("eventFavoriteShow", false);
+      };
+      const handleReload = () => {
+        isLoading.value = true;
+        mmTreeData.value = [];
+        getFavoriteFold();
+      };
+      const eventClose = () => {
+        mmManageShow.value = false;
+        handleReload();
       };
       const getFavoriteFold = async () => {
         let u = "https://center.mcmod.cn/frame/CenterFavoriteFold/";
         let d = {
-          uid: userStore.userID,
+          uid: mmStore.userID,
           data: JSON.stringify({})
         };
-        let res = {};
-        res = await request(u, d);
+        let res = await request(u, d);
         let { state, html } = res;
         if (state !== 0) return;
         let node = new DOMParser().parseFromString(html, "text/html");
@@ -153,20 +351,17 @@
           }
           _favList.push({
             key: favID,
-            favID,
-            favName,
-            title: favName,
-            // title: `${favName} 模组x${modCount} 整合包x${modPackCount}`,
+            label: favName,
             modCount,
-            modPackCount
-            // isLeaf: modCount === 0 && modPackCount === 0,
+            modPackCount,
+            isLeaf: false
           });
         });
-        treeFavData.value = _favList;
+        parseData(_favList);
       };
-      const onLoadData = (treeNode) => {
+      const onLoadData = async (node) => {
         return new Promise(async (resolve) => {
-          let { favID, favName, modCount, modPackCount, key, title, children, isLeaf } = treeNode.dataRef;
+          let { key, modCount, modPackCount, children } = node;
           if (children) {
             resolve();
             return;
@@ -175,18 +370,17 @@
           const getFavList = async (category) => {
             let u = "https://center.mcmod.cn/frame/CenterFavoriteSoltPage/";
             let d = {
-              uid: userStore.userID,
+              uid: mmStore.userID,
               data: JSON.stringify({
                 fold: key,
                 category
               })
             };
-            let res = {};
-            res = await request(u, d);
+            let res = await request(u, d);
             let { state, html } = res;
             if (state !== 0) return;
-            let node = new DOMParser().parseFromString(html, "text/html");
-            let nodeList = node.querySelectorAll(".favorite-slot-ul li");
+            let childrenNode = new DOMParser().parseFromString(html, "text/html");
+            let nodeList = childrenNode.querySelectorAll(".favorite-slot-ul li");
             nodeList.forEach((n) => {
               var _a;
               let modID = n.getAttribute("data-id");
@@ -195,172 +389,323 @@
               let modPic = _modInfoNode == null ? void 0 : _modInfoNode.getAttribute("src");
               let modName = _modInfoNode == null ? void 0 : _modInfoNode.getAttribute("alt");
               modArr.push({
-                title: modName,
+                label: modName,
                 key: modID,
                 modPic,
                 modURL,
-                class: "mm_tree_lv2",
+                mode: category === "class" ? "mod" : "modpack",
+                parentKey: key,
                 isLeaf: true
               });
             });
           };
           if (modCount) {
             modArr.push({
-              title: `模组 (${modCount})`,
+              label: `模组 (${modCount})`,
+              mode: "mod",
+              parentKey: key,
               disabled: true,
-              class: "mm_tree_lv2",
               isLeaf: true
             });
             await getFavList("class");
           }
           if (modPackCount) {
             modArr.push({
-              title: `整合包 (${modPackCount})`,
+              label: `整合包 (${modPackCount})`,
+              mode: "modpack",
+              parentKey: key,
               disabled: true,
-              class: "mm_tree_lv2",
               isLeaf: true
             });
             await getFavList("modpack");
           }
           if (modCount === 0 && modPackCount === 0) {
             modArr.push({
-              title: `这个收藏夹是空的。`,
+              label: `这个收藏夹是空的。`,
               disabled: true,
-              class: "mm_tree_lv2",
               isLeaf: true
             });
           }
-          if (treeNode.dataRef) treeNode.dataRef.children = modArr;
+          node.children = modArr;
           resolve();
         });
       };
+      const parseData = (data) => {
+        let gmFavList = _GM_getValue("favList");
+        let mmFavList;
+        if (gmFavList && gmFavList.length) {
+          mmFavList = data.filter((item) => {
+            let o = gmFavList.find((i) => i.favID === item.key);
+            if (o && o.folderHidden === false) {
+              return {
+                ...item
+              };
+            }
+          });
+          gmFavList = data.map((item) => {
+            let o = gmFavList.find((i) => i.favID === item.key);
+            return {
+              favID: item.key,
+              favName: item.label,
+              folderHidden: o ? o.folderHidden : false,
+              folderExpand: o ? o.folderExpand : false
+            };
+          });
+          mmDefaultExpandedKeys = gmFavList.filter((item) => item.folderExpand).map((item) => item.favID);
+        } else {
+          gmFavList = data.map((item) => {
+            return {
+              favID: item.key,
+              favName: item.label,
+              folderHidden: false,
+              folderExpand: false
+            };
+          });
+          mmFavList = data;
+        }
+        _GM_setValue("favList", gmFavList);
+        mmStore.setFavoriteData(gmFavList);
+        mmTreeData.value = mmFavList;
+        isLoading.value = false;
+      };
+      const handleDropDownSelect = (key) => {
+        switch (key) {
+          case "manage":
+            mmManageShow.value = true;
+            break;
+          case "reload":
+            handleReload();
+            break;
+        }
+      };
+      const treeRenderSwitcherIcon = (node) => {
+        const { expanded } = node;
+        let nodeIcon = vue.h("i", {
+          class: `fas fa-folder${expanded ? "-open" : ""}`
+        });
+        return [nodeIcon];
+      };
+      const treeRenderLabel = (node) => {
+        const { key, label, modPic, modURL, modCount, modPackCount } = node.option;
+        if (modURL) {
+          let nodeImg = vue.h("img", { class: "mm-fav-cover", src: modPic });
+          let nodeTitle = vue.h("span", { class: "mm-fav-label" }, label);
+          let nodeA = vue.h("a", {
+            href: modURL,
+            title: label,
+            target: "_blank"
+          }, vue.h("div", { class: "mm-fav-list" }, [nodeImg, nodeTitle]));
+          return [nodeA];
+        }
+        if (!modURL) {
+          let nodeArr = [vue.h("span", { class: "mm-fav-label-lv1" }, label)];
+          if (modCount) {
+            let nodeModCount = vue.h("span", {
+              class: "mm-fav-label-icon",
+              title: "模组"
+            }, [vue.h("i", { class: "fa fa-cubes" }), " x" + modCount]);
+            nodeArr.push(nodeModCount);
+          }
+          if (modPackCount) {
+            let nodeModPackCount = vue.h("span", {
+              class: "mm-fav-label-icon",
+              title: "整合包"
+            }, [vue.h("i", { class: "fa fa-file-zip-o" }), " x" + modPackCount]);
+            nodeArr.push(nodeModPackCount);
+          }
+          return nodeArr;
+        }
+      };
+      const findSiblingsAndIndex = (node, nodes) => {
+        if (!nodes) return [null, null];
+        for (let i = 0; i < nodes.length; ++i) {
+          const siblingNode = nodes[i];
+          if (siblingNode.key === node.key)
+            return [nodes, i];
+          const [siblings, index] = findSiblingsAndIndex(node, siblingNode.children);
+          if (siblings && index !== null)
+            return [siblings, index];
+        }
+        return [null, null];
+      };
+      const treeDrop = async (data) => {
+        draggable.value = false;
+        let { node, dragNode, dropPosition } = data;
+        let str;
+        if (node.mode !== dragNode.mode) {
+          str = dragNode.mode === "mod" ? "你不能把模组放到整合包内" : "你不能把整合包放到模组内";
+        }
+        if (node.parentKey !== dragNode.parentKey) {
+          str = "你不能跨收藏夹操作";
+          if (node.mode !== dragNode.mode) {
+            str += dragNode.mode === "mod" ? "，更不能把模组放到整合包内" : "，更不能把整合包放到模组内";
+          }
+        }
+        if (str) {
+          window.$message.warning(str);
+          draggable.value = true;
+          return;
+        }
+        const [dragNodeSiblings, dragNodeIndex] = findSiblingsAndIndex(dragNode, mmTreeData.value);
+        if (dragNodeSiblings === null || dragNodeIndex === null) return;
+        dragNodeSiblings.splice(dragNodeIndex, 1);
+        if (dropPosition === "after") {
+          const [nodeSiblings, nodeIndex] = findSiblingsAndIndex(node, mmTreeData.value);
+          if (nodeSiblings === null || nodeIndex === null) return;
+          nodeSiblings.splice(nodeIndex + 1, 0, dragNode);
+        }
+        let arr = dragNodeSiblings.filter((o) => o.mode === dragNode.mode && !o.disabled);
+        let objList = {};
+        for (let i = 0; i < arr.length; i++) {
+          objList[i] = arr[i].key;
+        }
+        let u = "https://center.mcmod.cn/action/doFavoriteSortSlot/";
+        let sortData = {
+          data: JSON.stringify({
+            fold: dragNode.parentKey,
+            category: categoryEm[dragNode.mode],
+            list: objList
+          })
+        };
+        let res = await request(u, sortData);
+        let { state } = res;
+        draggable.value = true;
+        if (state !== 0) return;
+        mmTreeData.value = Array.from(mmTreeData.value);
+      };
       vue.onMounted(() => {
-        getUserID();
-        if (!userStore.userID) return;
         getFavoriteFold();
       });
-      const handleTreeSelect = (sKeys, info) => {
-        expandedKeys.value = sKeys;
-      };
       return (_ctx, _cache) => {
-        const _component_a_button = vue.resolveComponent("a-button");
-        const _component_a_tree = vue.resolveComponent("a-tree");
-        return vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [
-          !vue.unref(modalShow) ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_1, [
-            vue.createElementVNode("i", {
-              class: "fa-solid fa-star mm_sidebar_fav",
-              onClick: _cache[0] || (_cache[0] = ($event) => vue.isRef(modalShow) ? modalShow.value = true : modalShow = true)
-            })
-          ])) : vue.createCommentVNode("", true),
-          vue.unref(modalShow) ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_2, [
-            vue.createVNode(_component_a_button, {
-              class: "mm_close",
-              type: "link",
-              size: "small",
-              onClick: _cache[1] || (_cache[1] = ($event) => vue.isRef(modalShow) ? modalShow.value = false : modalShow = false)
+        return vue.openBlock(), vue.createElementBlock("div", _hoisted_1, [
+          vue.createElementVNode("div", _hoisted_2, [
+            vue.createVNode(vue.unref(naiveUi.NIcon), { size: "24" }, {
+              default: vue.withCtx(() => _cache[0] || (_cache[0] = [
+                vue.createElementVNode("i", { class: "fas fa-star" }, null, -1)
+              ])),
+              _: 1
+            }),
+            _cache[3] || (_cache[3] = vue.createElementVNode("div", { class: "mm-header-title" }, "收藏", -1)),
+            vue.createVNode(vue.unref(naiveUi.NDropdown), {
+              trigger: "click",
+              options: mmDropDownOptions.value,
+              onSelect: handleDropDownSelect
             }, {
-              default: vue.withCtx(() => _cache[4] || (_cache[4] = [
+              default: vue.withCtx(() => [
+                vue.createVNode(vue.unref(naiveUi.NIcon), {
+                  class: "mm-more",
+                  size: "18",
+                  title: "更多"
+                }, {
+                  default: vue.withCtx(() => _cache[1] || (_cache[1] = [
+                    vue.createElementVNode("i", { class: "fa-solid fa-ellipsis" }, null, -1)
+                  ])),
+                  _: 1
+                })
+              ]),
+              _: 1
+            }, 8, ["options"]),
+            vue.createVNode(vue.unref(naiveUi.NIcon), {
+              class: "mm-close",
+              size: "18",
+              title: "关闭",
+              onClick: handleClose
+            }, {
+              default: vue.withCtx(() => _cache[2] || (_cache[2] = [
                 vue.createElementVNode("i", { class: "fa-solid fa-xmark" }, null, -1)
               ])),
               _: 1
             })
-          ])) : vue.createCommentVNode("", true),
-          vue.unref(modalShow) ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3, [
-            vue.createVNode(_component_a_tree, {
-              expandedKeys: expandedKeys.value,
-              "onUpdate:expandedKeys": _cache[2] || (_cache[2] = ($event) => expandedKeys.value = $event),
-              selectedKeys: selectedKeys.value,
-              "onUpdate:selectedKeys": _cache[3] || (_cache[3] = ($event) => selectedKeys.value = $event),
-              blockNode: true,
-              "show-line": false,
-              "show-icon": false,
-              selectable: false,
-              "tree-data": vue.unref(treeFavData),
-              "load-data": onLoadData,
-              onSelect: handleTreeSelect
+          ]),
+          vue.createElementVNode("div", _hoisted_3, [
+            vue.unref(isLoading) ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4, [
+              vue.createVNode(vue.unref(naiveUi.NSkeleton), {
+                text: "",
+                repeat: 2
+              })
+            ])) : (vue.openBlock(), vue.createBlock(vue.unref(naiveUi.NScrollbar), {
+              key: 1,
+              style: { "max-height": "var(--height)" }
             }, {
-              switcherIcon: vue.withCtx(({ expanded }) => [
-                expanded ? (vue.openBlock(), vue.createElementBlock("i", _hoisted_4)) : (vue.openBlock(), vue.createElementBlock("i", _hoisted_5))
-              ]),
-              title: vue.withCtx(({ title, key, modPic, modURL, modCount, modPackCount }) => [
-                modURL ? (vue.openBlock(), vue.createElementBlock("a", {
-                  key: 0,
-                  target: "_blank",
-                  href: modURL,
-                  title
-                }, [
-                  vue.createElementVNode("div", _hoisted_7, [
-                    modPic ? (vue.openBlock(), vue.createElementBlock("img", {
-                      key: 0,
-                      class: "mm_fav_cover",
-                      src: modPic,
-                      alt: title
-                    }, null, 8, _hoisted_8)) : vue.createCommentVNode("", true),
-                    vue.createElementVNode("span", _hoisted_9, vue.toDisplayString(title), 1)
-                  ])
-                ], 8, _hoisted_6)) : (vue.openBlock(), vue.createElementBlock(vue.Fragment, { key: 1 }, [
-                  vue.createElementVNode("span", null, vue.toDisplayString(title), 1),
-                  modCount ? (vue.openBlock(), vue.createElementBlock("span", _hoisted_10, [
-                    _cache[5] || (_cache[5] = vue.createElementVNode("i", { class: "fa fa-cubes" }, null, -1)),
-                    vue.createTextVNode(" x" + vue.toDisplayString(modCount), 1)
-                  ])) : vue.createCommentVNode("", true),
-                  modPackCount ? (vue.openBlock(), vue.createElementBlock("span", _hoisted_11, [
-                    _cache[6] || (_cache[6] = vue.createElementVNode("i", { class: "fa fa-file-zip-o" }, null, -1)),
-                    vue.createTextVNode(" x" + vue.toDisplayString(modPackCount), 1)
-                  ])) : vue.createCommentVNode("", true),
-                  modCount === 0 && modPackCount === 0 ? (vue.openBlock(), vue.createElementBlock("span", _hoisted_12, "空收藏夹")) : vue.createCommentVNode("", true)
-                ], 64))
+              default: vue.withCtx(() => [
+                vue.createVNode(vue.unref(naiveUi.NTree), {
+                  "block-line": "",
+                  "expand-on-click": "",
+                  "default-expanded-keys": vue.unref(mmDefaultExpandedKeys),
+                  draggable: true,
+                  selectable: false,
+                  data: vue.unref(mmTreeData),
+                  "on-load": onLoadData,
+                  "render-switcher-icon": treeRenderSwitcherIcon,
+                  "render-label": treeRenderLabel,
+                  onDrop: treeDrop
+                }, {
+                  empty: vue.withCtx(() => _cache[4] || (_cache[4] = [
+                    vue.createElementVNode("p", { class: "mm-empty" }, "暂无收藏夹。", -1)
+                  ])),
+                  _: 1
+                }, 8, ["default-expanded-keys", "data"])
               ]),
               _: 1
-            }, 8, ["expandedKeys", "selectedKeys", "tree-data"])
-          ])) : vue.createCommentVNode("", true)
+            }))
+          ]),
+          vue.createVNode(MManage, {
+            showModal: vue.unref(mmManageShow),
+            onEmitClose: eventClose
+          }, null, 8, ["showModal"])
+        ]);
+      };
+    }
+  });
+  const MFavorite = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-6b258809"]]);
+  const _sfc_main = /* @__PURE__ */ vue.defineComponent({
+    __name: "App",
+    setup(__props) {
+      const mmStore = useMMStore();
+      let modalFavoriteShow = vue.ref(false);
+      const getUserID = () => {
+        let userUrlNode = document.querySelector(".top-username a") || document.querySelector(".header-user-avatar a");
+        if (!userUrlNode) return null;
+        let url = userUrlNode.getAttribute("href");
+        let arr = url == null ? void 0 : url.match(/\d+/);
+        if (arr == null ? void 0 : arr.length) {
+          mmStore.setUserID(arr[0]);
+        }
+      };
+      const handleFavoriteShow = (b) => {
+        modalFavoriteShow.value = b;
+      };
+      vue.onMounted(() => {
+        getUserID();
+        if (!mmStore.userID) return;
+        modalFavoriteShow.value = true;
+      });
+      return (_ctx, _cache) => {
+        return vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [
+          !vue.unref(modalFavoriteShow) ? (vue.openBlock(), vue.createBlock(MSidebar, {
+            key: 0,
+            onEventFavoriteShow: handleFavoriteShow
+          })) : vue.createCommentVNode("", true),
+          vue.unref(modalFavoriteShow) ? (vue.openBlock(), vue.createBlock(MFavorite, {
+            key: 1,
+            onEventFavoriteShow: handleFavoriteShow
+          })) : vue.createCommentVNode("", true)
         ], 64);
       };
     }
   });
-  const _export_sfc = (sfc, props) => {
-    const target = sfc.__vccOpts || sfc;
-    for (const [key, val] of props) {
-      target[key] = val;
-    }
-    return target;
-  };
-  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-22dd0357"]]);
-  const app = vue.createApp(App);
+  const app = vue.createApp(_sfc_main);
   const pinia = pinia$1.createPinia();
   app.use(pinia);
-  app.use(antDesignVue.Button);
-  app.use(antDesignVue.Tree);
-  const appScroll = (nodeDiv) => {
-    const node = document.querySelector(".center .main .news_block");
-    if (node) {
-      let top = node.getBoundingClientRect().top;
-      let _top = 0;
-      switch (true) {
-        case (top >= 60 && top <= 270):
-          _top = top;
-          break;
-        case top < 60:
-          _top = 70;
-          break;
-        case top > 270:
-          _top = 286;
-          break;
-      }
-      nodeDiv.style.top = `${_top}px`;
-    }
-  };
+  const { message } = naiveUi.createDiscreteApi(["message"]);
+  window.$message = message;
   app.mount(
     (() => {
       const nodeDiv = document.createElement("div");
-      nodeDiv.id = "app";
+      nodeDiv.id = "mm-main";
       document.body.append(nodeDiv);
-      appScroll(nodeDiv);
-      window.addEventListener("scroll", function() {
-        appScroll(nodeDiv);
-      });
       return nodeDiv;
     })()
   );
 
-})(Vue, Pinia, antd);
+})(Vue, Pinia, naive);
