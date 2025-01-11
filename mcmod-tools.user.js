@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MC百科 - 便捷工具
 // @namespace    https://github.com/ifover/UserScript
-// @version      0.3
+// @version      0.4
 // @author       ifover
 // @description  在MC百科首页显示收藏列表，方便导航
 // @license      GPL-3.0 License
@@ -20,45 +20,81 @@
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
-(a=>{if(typeof GM_addStyle=="function"){GM_addStyle(a);return}const e=document.createElement("style");e.textContent=a,document.head.append(e)})(" div,a,ul,li{color:unset}.ooops{z-index:1}.n-message-container{z-index:10000}#mm-main{cursor:default;font-size:12px}.mm-more:hover,.mm-close:hover{cursor:pointer;color:#00a0d8}.mm-sidebar[data-v-ccbe2c9f]{position:fixed;left:0;top:286px;z-index:10;transform:translate(-60%)}.mm-sidebar .mm-btn[data-v-ccbe2c9f]{height:42px;transition:.3s ease-out}.mm-sidebar .mm-btn[data-v-ccbe2c9f]:hover{transform:translate(60%)}.mm-sidebar .mm-icon[data-v-ccbe2c9f]{display:flex;align-items:center;justify-content:center}.mm-sidebar .mm-icon.mm-fav[data-v-ccbe2c9f]{font-size:26px;color:#ccc}.mm-manage[data-v-8a18aa94]{cursor:default;width:420px;background-color:#fff;border-radius:5px}.mm-manage .mm-manage-header[data-v-8a18aa94]{display:flex;align-items:center;padding:10px 15px;border-bottom:1px solid #88888822}.mm-manage .mm-manage-header .mm-manage-header-title[data-v-8a18aa94]{font-size:16px;font-weight:600}.mm-manage .mm-manage-header .mm-close[data-v-8a18aa94]{margin-left:auto}.mm-manage .mm-manage-content[data-v-8a18aa94]{padding:10px 15px}.mm-manage .mm-manage-content .mm-description[data-v-8a18aa94]{display:flex;gap:8px;margin-bottom:8px}.mm-manage .mm-manage-content .mm-description>div[data-v-8a18aa94]{background-color:#33333320;padding:0 6px;border-radius:4px}.mm-manage .mm-manage-content .mm-icon-group[data-v-8a18aa94]{display:flex;gap:12px;align-items:center;justify-content:center}.mm-manage .mm-manage-content .mm-icon-group .mm-action-icon[data-v-8a18aa94]{cursor:pointer;color:#666;transition:color .2s ease}.mm-manage .mm-manage-content .mm-icon-group .mm-action-icon[data-v-8a18aa94]:hover:not(.disabled){color:#18a058}.mm-manage .mm-manage-content .mm-icon-group .mm-action-icon.disabled[data-v-8a18aa94]{cursor:not-allowed;color:#999;opacity:.6}#mm-favorites[data-v-6b258809]{width:320px;max-height:calc(100vh - 70px);overflow:hidden;background-color:#fff;box-shadow:0 4px 12px #0000000d;border-radius:4px;position:fixed;top:60px;left:10px;z-index:11}#mm-favorites .mm-panel-header[data-v-6b258809]{height:46px;display:flex;align-items:center;box-sizing:border-box;gap:8px;border-bottom:1px solid rgba(136,136,136,.133);padding:8px 12px;color:#000;fill:#000}#mm-favorites .mm-panel-header .mm-header-title[data-v-6b258809]{font-size:18px;font-weight:600}#mm-favorites .mm-panel-header .mm-more[data-v-6b258809]{margin-left:auto}#mm-favorites .mm-panel-content[data-v-6b258809]{padding:6px 12px}#mm-favorites .mm-panel-content .mm-empty[data-v-6b258809]{text-align:center}[data-v-6b258809] .n-tree .n-tree-node-switcher.n-tree-node-switcher--expanded{transform:none}[data-v-6b258809] .n-tree .n-tree-node-wrapper:has(.mm-fav-label-lv1){position:sticky;top:0;z-index:1;background-color:#fff}[data-v-6b258809] .n-tree .n-tree-node-wrapper:has(.mm-fav-label-lv1):has(.n-tree-node-switcher--hide){top:30px}[data-v-6b258809] .n-tree a{text-decoration:none}[data-v-6b258809] .n-tree a:hover *{color:#2575f9}[data-v-6b258809] .n-tree .mm-fav-label-icon{font-size:12px;margin-left:8px;color:#888}[data-v-6b258809] .n-tree .mm-fav-list{display:flex;align-items:center;padding:2px 0;cursor:pointer}[data-v-6b258809] .n-tree .mm-fav-list .mm-fav-cover{width:60px;opacity:.77;margin-right:6px}[data-v-6b258809] .n-tree .mm-fav-list .mm-fav-label{overflow:hidden;white-space:nowrap;text-overflow:ellipsis} ");
+(e=>{if(typeof GM_addStyle=="function"){GM_addStyle(e);return}const a=document.createElement("style");a.textContent=e,document.head.append(a)})(" div,a,ul,li{color:unset}.ooops{z-index:1}.mcver>ul>ul{display:block!important}.n-message-container{z-index:10000}#mm-main{cursor:default;font-size:12px}.mm-more:hover,.mm-close:hover{cursor:pointer;color:#00a0d8}.mm-sidebar[data-v-011f4e02]{display:flex;flex-direction:column;gap:12px;position:fixed;left:0;top:286px;z-index:10;transform:translate(-60%)}.mm-sidebar .mm-btn[data-v-011f4e02]{height:42px;transition:.3s ease-out}.mm-sidebar .mm-btn[data-v-011f4e02]:hover{transform:translate(60%)}.mm-sidebar .mm-btn.disabled[data-v-011f4e02]{cursor:not-allowed;color:#999;opacity:.6}.mm-sidebar .mm-icon[data-v-011f4e02]{display:flex;align-items:center;justify-content:center}.mm-sidebar .mm-icon.mm-fav[data-v-011f4e02]{font-size:26px;color:#ccc}.mm-manage[data-v-8a18aa94]{cursor:default;width:420px;background-color:#fff;border-radius:5px}.mm-manage .mm-manage-header[data-v-8a18aa94]{display:flex;align-items:center;padding:10px 15px;border-bottom:1px solid #88888822}.mm-manage .mm-manage-header .mm-manage-header-title[data-v-8a18aa94]{font-size:16px;font-weight:600}.mm-manage .mm-manage-header .mm-close[data-v-8a18aa94]{margin-left:auto}.mm-manage .mm-manage-content[data-v-8a18aa94]{padding:10px 15px}.mm-manage .mm-manage-content .mm-description[data-v-8a18aa94]{display:flex;gap:8px;margin-bottom:8px}.mm-manage .mm-manage-content .mm-description>div[data-v-8a18aa94]{background-color:#33333320;padding:0 6px;border-radius:4px}.mm-manage .mm-manage-content .mm-icon-group[data-v-8a18aa94]{display:flex;gap:12px;align-items:center;justify-content:center}.mm-manage .mm-manage-content .mm-icon-group .mm-action-icon[data-v-8a18aa94]{cursor:pointer;color:#666;transition:color .2s ease}.mm-manage .mm-manage-content .mm-icon-group .mm-action-icon[data-v-8a18aa94]:hover:not(.disabled){color:#18a058}.mm-manage .mm-manage-content .mm-icon-group .mm-action-icon.disabled[data-v-8a18aa94]{cursor:not-allowed;color:#999;opacity:.6}#mm-favorites[data-v-b88b14de]{width:320px;max-height:calc(100vh - 70px);overflow:hidden;background-color:#fff;box-shadow:0 4px 12px #0000000d;border-radius:4px;position:fixed;top:60px;left:10px;z-index:11}#mm-favorites .mm-panel-header[data-v-b88b14de]{height:46px;display:flex;align-items:center;box-sizing:border-box;gap:8px;border-bottom:1px solid rgba(136,136,136,.133);padding:8px 12px;color:#000;fill:#000}#mm-favorites .mm-panel-header .mm-header-title[data-v-b88b14de]{font-size:18px;font-weight:600}#mm-favorites .mm-panel-header .mm-more[data-v-b88b14de]{margin-left:auto}#mm-favorites .mm-panel-content[data-v-b88b14de]{padding:6px 12px}#mm-favorites .mm-panel-content .mm-empty[data-v-b88b14de]{text-align:center}[data-v-b88b14de] .n-tree .n-tree-node-switcher.n-tree-node-switcher--expanded{transform:none}[data-v-b88b14de] .n-tree .n-tree-node-wrapper:has(.mm-fav-label-lv1){position:sticky;top:0;z-index:1;background-color:#fff}[data-v-b88b14de] .n-tree .n-tree-node-wrapper:has(.mm-fav-label-lv1):has(.n-tree-node-switcher--hide){top:30px}[data-v-b88b14de] .n-tree a{text-decoration:none}[data-v-b88b14de] .n-tree a:hover *{color:#2575f9}[data-v-b88b14de] .n-tree .mm-fav-label-icon{font-size:12px;margin-left:8px;color:#888}[data-v-b88b14de] .n-tree .mm-fav-list{display:flex;align-items:center;padding:2px 0;cursor:pointer}[data-v-b88b14de] .n-tree .mm-fav-list .mm-fav-cover{width:60px;opacity:.77;margin-right:6px}[data-v-b88b14de] .n-tree .mm-fav-list .mm-fav-label{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#mm-setting[data-v-7cfc0576]{width:320px;max-height:calc(100vh - 70px);overflow:hidden;background-color:#fff;box-shadow:0 4px 12px #0000000d;border-radius:4px;position:fixed;top:60px;left:10px;z-index:11}#mm-setting .mm-panel-header[data-v-7cfc0576]{height:46px;display:flex;align-items:center;box-sizing:border-box;gap:8px;border-bottom:1px solid rgba(136,136,136,.133);padding:8px 12px;color:#000;fill:#000}#mm-setting .mm-panel-header .mm-header-title[data-v-7cfc0576]{font-size:18px;font-weight:600}#mm-setting .mm-panel-header .mm-close[data-v-7cfc0576]{margin-left:auto}#mm-setting .mm-panel-content[data-v-7cfc0576]{padding:6px 12px}#mm-setting .mm-panel-content .mm-setting-content[data-v-7cfc0576]{display:flex;justify-content:space-between;align-items:center}#mm-setting .mm-panel-content .mm-setting-content-title[data-v-7cfc0576]{font-size:14px}#mm-setting .mm-panel-content .mm-setting-content-value[data-v-7cfc0576]{width:120px} ");
 
 (function (vue, pinia$1, naiveUi) {
   'use strict';
 
-  const _hoisted_1$2 = {
-    key: 0,
-    class: "mm-sidebar"
-  };
-  const _sfc_main$3 = /* @__PURE__ */ vue.defineComponent({
+  const useMMStore = pinia$1.defineStore("mm", {
+    state: () => ({
+      userID: "0000",
+      favoriteData: [],
+      showFavorite: false,
+      showSettings: false
+    }),
+    actions: {
+      setUserID(id) {
+        this.userID = id;
+      },
+      setFavoriteData(data) {
+        this.favoriteData = data;
+      },
+      setPanelShow(data, b) {
+        this[data] = b;
+      }
+    }
+  });
+  const _hoisted_1$3 = { class: "mm-sidebar" };
+  const _sfc_main$4 = /* @__PURE__ */ vue.defineComponent({
     __name: "MSidebar",
-    emits: ["eventFavoriteShow"],
-    setup(__props, { emit: __emit }) {
-      let modalShow = vue.ref(false);
-      const emits = __emit;
-      const handleOpen = () => {
-        emits("eventFavoriteShow", true);
+    setup(__props) {
+      const mmStore = useMMStore();
+      const handleOpen = (d) => {
+        mmStore.$patch({
+          showFavorite: false,
+          showSettings: false
+        });
+        mmStore.setPanelShow(d, true);
       };
       return (_ctx, _cache) => {
-        return !vue.unref(modalShow) ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_1$2, [
+        return vue.openBlock(), vue.createElementBlock("div", _hoisted_1$3, [
           vue.createVNode(vue.unref(naiveUi.NFloatButton), {
-            class: "mm-btn",
+            class: vue.normalizeClass(["mm-btn", { disabled: vue.unref(mmStore).showFavorite }]),
             width: "42",
             position: "relative",
             right: 0,
             bottom: 0,
-            onClick: handleOpen
+            onClick: _cache[0] || (_cache[0] = ($event) => handleOpen("showFavorite"))
           }, {
             default: vue.withCtx(() => [
               vue.createVNode(vue.unref(naiveUi.NIcon), { size: "26" }, {
-                default: vue.withCtx(() => _cache[0] || (_cache[0] = [
-                  vue.createElementVNode("i", { class: "fa-regular fa-heart" }, null, -1)
+                default: vue.withCtx(() => _cache[2] || (_cache[2] = [
+                  vue.createElementVNode("i", { class: "fa-solid fa-heart" }, null, -1)
                 ])),
                 _: 1
               })
             ]),
             _: 1
-          })
-        ])) : vue.createCommentVNode("", true);
+          }, 8, ["class"]),
+          vue.createVNode(vue.unref(naiveUi.NFloatButton), {
+            class: vue.normalizeClass(["mm-btn", { disabled: vue.unref(mmStore).showSettings }]),
+            width: "42",
+            position: "relative",
+            right: 0,
+            bottom: 0,
+            onClick: _cache[1] || (_cache[1] = ($event) => handleOpen("showSettings"))
+          }, {
+            default: vue.withCtx(() => [
+              vue.createVNode(vue.unref(naiveUi.NIcon), { size: "26" }, {
+                default: vue.withCtx(() => _cache[3] || (_cache[3] = [
+                  vue.createElementVNode("i", { class: "fa-solid fa-gear" }, null, -1)
+                ])),
+                _: 1
+              })
+            ]),
+            _: 1
+          }, 8, ["class"])
+        ]);
       };
     }
   });
@@ -69,31 +105,17 @@
     }
     return target;
   };
-  const MSidebar = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-ccbe2c9f"]]);
+  const MSidebar = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-011f4e02"]]);
   var _GM_getValue = /* @__PURE__ */ (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
   var _GM_setValue = /* @__PURE__ */ (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
   var _GM_xmlhttpRequest = /* @__PURE__ */ (() => typeof GM_xmlhttpRequest != "undefined" ? GM_xmlhttpRequest : void 0)();
-  const useMMStore = pinia$1.defineStore("mm", {
-    state: () => ({
-      userID: "0000",
-      favoriteData: []
-    }),
-    actions: {
-      setUserID(id) {
-        this.userID = id;
-      },
-      setFavoriteData(data) {
-        this.favoriteData = data;
-      }
-    }
-  });
-  const _hoisted_1$1 = { class: "mm-manage" };
-  const _hoisted_2$1 = { class: "mm-manage-header" };
-  const _hoisted_3$1 = { class: "mm-manage-content" };
-  const _hoisted_4$1 = { class: "mm-description" };
+  const _hoisted_1$2 = { class: "mm-manage" };
+  const _hoisted_2$2 = { class: "mm-manage-header" };
+  const _hoisted_3$2 = { class: "mm-manage-content" };
+  const _hoisted_4$2 = { class: "mm-description" };
   const _hoisted_5 = { style: { "text-align": "center" } };
   const _hoisted_6 = { class: "mm-icon-group" };
-  const _sfc_main$2 = /* @__PURE__ */ vue.defineComponent({
+  const _sfc_main$3 = /* @__PURE__ */ vue.defineComponent({
     __name: "MManage",
     props: {
       showModal: {
@@ -154,8 +176,8 @@
           show: props.showModal
         }, {
           default: vue.withCtx(() => [
-            vue.createElementVNode("div", _hoisted_1$1, [
-              vue.createElementVNode("div", _hoisted_2$1, [
+            vue.createElementVNode("div", _hoisted_1$2, [
+              vue.createElementVNode("div", _hoisted_2$2, [
                 _cache[1] || (_cache[1] = vue.createElementVNode("div", { class: "mm-manage-header-title" }, "收藏夹管理", -1)),
                 vue.createVNode(vue.unref(naiveUi.NIcon), {
                   class: "mm-close",
@@ -169,8 +191,8 @@
                   _: 1
                 })
               ]),
-              vue.createElementVNode("div", _hoisted_3$1, [
-                vue.createElementVNode("div", _hoisted_4$1, [
+              vue.createElementVNode("div", _hoisted_3$2, [
+                vue.createElementVNode("div", _hoisted_4$2, [
                   _cache[6] || (_cache[6] = vue.createTextVNode(" Tips: ")),
                   vue.createElementVNode("div", null, [
                     vue.createVNode(vue.unref(naiveUi.NIcon), { style: { "margin-right": "3px" } }, {
@@ -247,7 +269,7 @@
       };
     }
   });
-  const MManage = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-8a18aa94"]]);
+  const MManage = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-8a18aa94"]]);
   const json2FormData = (json) => {
     return Object.keys(json).map((key) => {
       return encodeURIComponent(key) + "=" + encodeURIComponent(json[key]);
@@ -275,20 +297,19 @@
       });
     });
   };
-  const _hoisted_1 = { id: "mm-favorites" };
-  const _hoisted_2 = { class: "mm-panel-header" };
-  const _hoisted_3 = {
+  const _hoisted_1$1 = { id: "mm-favorites" };
+  const _hoisted_2$1 = { class: "mm-panel-header" };
+  const _hoisted_3$1 = {
     class: "mm-panel-content",
     style: { "--height": "calc(100vh - 122px)" }
   };
-  const _hoisted_4 = {
+  const _hoisted_4$1 = {
     key: 0,
     class: "mm-skeleton"
   };
-  const _sfc_main$1 = /* @__PURE__ */ vue.defineComponent({
+  const _sfc_main$2 = /* @__PURE__ */ vue.defineComponent({
     __name: "MFavorite",
-    emits: ["eventFavoriteShow"],
-    setup(__props, { emit: __emit }) {
+    setup(__props) {
       const mmStore = useMMStore();
       let isLoading = vue.ref(true);
       let draggable = vue.ref(true);
@@ -310,9 +331,8 @@
         mod: "class",
         modpack: "modpack"
       };
-      const emits = __emit;
       const handleClose = () => {
-        emits("eventFavoriteShow", false);
+        mmStore.setPanelShow("showFavorite", false);
       };
       const handleReload = () => {
         isLoading.value = true;
@@ -357,6 +377,7 @@
             isLeaf: false
           });
         });
+        if (!_favList.length) return;
         parseData(_favList);
       };
       const onLoadData = async (node) => {
@@ -430,11 +451,11 @@
           resolve();
         });
       };
-      const parseData = (data) => {
+      const parseData = (treeData) => {
         let gmFavList = _GM_getValue("favList");
         let mmFavList;
         if (gmFavList && gmFavList.length) {
-          mmFavList = data.filter((item) => {
+          mmFavList = treeData.filter((item) => {
             let o = gmFavList.find((i) => i.favID === item.key);
             if (o && o.folderHidden === false) {
               return {
@@ -442,7 +463,7 @@
               };
             }
           });
-          gmFavList = data.map((item) => {
+          gmFavList = treeData.map((item) => {
             let o = gmFavList.find((i) => i.favID === item.key);
             return {
               favID: item.key,
@@ -453,7 +474,7 @@
           });
           mmDefaultExpandedKeys = gmFavList.filter((item) => item.folderExpand).map((item) => item.favID);
         } else {
-          gmFavList = data.map((item) => {
+          gmFavList = treeData.map((item) => {
             return {
               favID: item.key,
               favName: item.label,
@@ -461,7 +482,7 @@
               folderExpand: false
             };
           });
-          mmFavList = data;
+          mmFavList = treeData;
         }
         _GM_setValue("favList", gmFavList);
         mmStore.setFavoriteData(gmFavList);
@@ -577,8 +598,8 @@
         getFavoriteFold();
       });
       return (_ctx, _cache) => {
-        return vue.openBlock(), vue.createElementBlock("div", _hoisted_1, [
-          vue.createElementVNode("div", _hoisted_2, [
+        return vue.openBlock(), vue.createElementBlock("div", _hoisted_1$1, [
+          vue.createElementVNode("div", _hoisted_2$1, [
             vue.createVNode(vue.unref(naiveUi.NIcon), { size: "24" }, {
               default: vue.withCtx(() => _cache[0] || (_cache[0] = [
                 vue.createElementVNode("i", { class: "fas fa-star" }, null, -1)
@@ -617,8 +638,8 @@
               _: 1
             })
           ]),
-          vue.createElementVNode("div", _hoisted_3, [
-            vue.unref(isLoading) ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4, [
+          vue.createElementVNode("div", _hoisted_3$1, [
+            vue.unref(isLoading) ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_4$1, [
               vue.createVNode(vue.unref(naiveUi.NSkeleton), {
                 text: "",
                 repeat: 2
@@ -657,12 +678,77 @@
       };
     }
   });
-  const MFavorite = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-6b258809"]]);
+  const MFavorite = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-b88b14de"]]);
+  const _hoisted_1 = { id: "mm-setting" };
+  const _hoisted_2 = { class: "mm-panel-header" };
+  const _hoisted_3 = { class: "mm-panel-content" };
+  const _hoisted_4 = { class: "mm-setting-content" };
+  const _sfc_main$1 = /* @__PURE__ */ vue.defineComponent({
+    __name: "MSettings",
+    setup(__props) {
+      const mmStore = useMMStore();
+      const mmFavShowMode = vue.ref(0);
+      const mmFavShowModeList = [
+        { label: "总是", value: 0 },
+        { label: "仅首页", value: 1 },
+        { label: "手动", value: 2 }
+      ];
+      const handleClose = () => {
+        mmStore.setPanelShow("showSettings", false);
+      };
+      const handleFavShowModeUpdate = (value) => {
+        _GM_setValue("favShowMode", value);
+      };
+      vue.onMounted(() => {
+        mmFavShowMode.value = _GM_getValue("favShowMode") || 0;
+      });
+      return (_ctx, _cache) => {
+        return vue.openBlock(), vue.createElementBlock("div", _hoisted_1, [
+          vue.createElementVNode("div", _hoisted_2, [
+            vue.createVNode(vue.unref(naiveUi.NIcon), { size: "24" }, {
+              default: vue.withCtx(() => _cache[1] || (_cache[1] = [
+                vue.createElementVNode("i", { class: "fa-solid fa-gear" }, null, -1)
+              ])),
+              _: 1
+            }),
+            _cache[3] || (_cache[3] = vue.createElementVNode("div", { class: "mm-header-title" }, "设置", -1)),
+            vue.createVNode(vue.unref(naiveUi.NIcon), {
+              class: "mm-close",
+              size: "18",
+              title: "关闭",
+              onClick: handleClose
+            }, {
+              default: vue.withCtx(() => _cache[2] || (_cache[2] = [
+                vue.createElementVNode("i", { class: "fa-solid fa-xmark" }, null, -1)
+              ])),
+              _: 1
+            })
+          ]),
+          vue.createElementVNode("div", _hoisted_3, [
+            vue.createElementVNode("div", _hoisted_4, [
+              _cache[4] || (_cache[4] = vue.createElementVNode("h3", { class: "mm-setting-content-title" }, "收藏显示模式", -1)),
+              vue.createVNode(vue.unref(naiveUi.NSelect), {
+                class: "mm-setting-content-value",
+                value: mmFavShowMode.value,
+                "onUpdate:value": [
+                  _cache[0] || (_cache[0] = ($event) => mmFavShowMode.value = $event),
+                  handleFavShowModeUpdate
+                ],
+                size: "small",
+                options: mmFavShowModeList
+              }, null, 8, ["value"])
+            ])
+          ])
+        ]);
+      };
+    }
+  });
+  const MSettings = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-7cfc0576"]]);
   const _sfc_main = /* @__PURE__ */ vue.defineComponent({
     __name: "App",
     setup(__props) {
       const mmStore = useMMStore();
-      let modalFavoriteShow = vue.ref(false);
+      let isLogged = vue.ref(false);
       const getUserID = () => {
         let userUrlNode = document.querySelector(".top-username a") || document.querySelector(".header-user-avatar a");
         if (!userUrlNode) return null;
@@ -670,26 +756,36 @@
         let arr = url == null ? void 0 : url.match(/\d+/);
         if (arr == null ? void 0 : arr.length) {
           mmStore.setUserID(arr[0]);
+          isLogged.value = true;
         }
       };
-      const handleFavoriteShow = (b) => {
-        modalFavoriteShow.value = b;
+      const showFavorite = () => {
+        let favShowMode = _GM_getValue("favShowMode");
+        switch (favShowMode) {
+          case 1:
+            let { host, pathname } = location;
+            if (host === "www.mcmod.cn" && pathname === "/") {
+              mmStore.setPanelShow("showFavorite", true);
+            }
+            break;
+          case 2:
+            mmStore.setPanelShow("showFavorite", false);
+            break;
+          default:
+            mmStore.setPanelShow("showFavorite", true);
+            break;
+        }
       };
       vue.onMounted(() => {
         getUserID();
-        if (!mmStore.userID) return;
-        modalFavoriteShow.value = true;
+        if (!isLogged.value) return;
+        showFavorite();
       });
       return (_ctx, _cache) => {
         return vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [
-          !vue.unref(modalFavoriteShow) ? (vue.openBlock(), vue.createBlock(MSidebar, {
-            key: 0,
-            onEventFavoriteShow: handleFavoriteShow
-          })) : vue.createCommentVNode("", true),
-          vue.unref(modalFavoriteShow) ? (vue.openBlock(), vue.createBlock(MFavorite, {
-            key: 1,
-            onEventFavoriteShow: handleFavoriteShow
-          })) : vue.createCommentVNode("", true)
+          vue.createVNode(MSidebar),
+          vue.unref(mmStore).showFavorite ? (vue.openBlock(), vue.createBlock(MFavorite, { key: 0 })) : vue.createCommentVNode("", true),
+          vue.unref(mmStore).showSettings ? (vue.openBlock(), vue.createBlock(MSettings, { key: 1 })) : vue.createCommentVNode("", true)
         ], 64);
       };
     }
